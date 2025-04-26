@@ -187,6 +187,9 @@ cython_debug/
 # Built Visual Studio Code Extensions
 *.vsix
 
+# Project specific data folder
+data/
+
 # macOS specific files
 .DS_Store
 .AppleDouble
