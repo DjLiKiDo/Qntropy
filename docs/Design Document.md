@@ -190,13 +190,13 @@ qntropy/
 - **Problem:** Users may have lost transaction records from defunct exchanges or old wallets, leading to gaps in their transaction history. This manifests as insufficient balances when processing known withdrawals or discrepancies in final balances.
 - **Solution Strategy:** The reconciliation process (3.2.1 and 3.2.2) is designed to mitigate this.
   - **Synthetic Deposits:** When an insufficient balance is detected (3.2.1), the system will generate a synthetic "Balancing Deposit" transaction immediately before the problematic withdrawal. This deposit will bring the balance up to the required amount.
-    - The cost basis of this synthetic deposit will need careful consideration. Options include:
+    - The cost basis of this synthetic deposit requires careful consideration. Options include:
       - Zero cost basis (most conservative, maximizes potential gain later).
       - Estimated cost basis based on market price at that time (requires price fetching, potentially less conservative).
       - User-provided estimate (requires user interaction).
-    - *Initial implementation likely uses zero cost basis for simplicity and conservatism.*
+    - **Initial Implementation:** The initial implementation **will use a zero cost basis** for these synthetic deposits. This is the most conservative approach from a tax perspective, as it assumes the highest possible capital gain when the asset associated with this synthetic deposit is eventually disposed of. Future enhancements might allow for alternative methods or user overrides.
   - **Final Balance Adjustments:** Discrepancies found during final balance consolidation (3.2.2) also result in synthetic transactions. These adjust the final state to match known reality.
-- **Auditability:** All generated synthetic transactions must be clearly flagged (e.g., in a 'notes' field or a dedicated flag) and included in audit reports, explaining *why* they were created (e.g., "Synthetic deposit created due to insufficient balance for withdrawal on YYYY-MM-DD", "Final balance adjustment based on user input"). This transparency is crucial for understanding the tax report's basis.
+- **Auditability:** All generated synthetic transactions must be clearly flagged (e.g., in a 'notes' field or a dedicated flag) and included in audit reports, explaining *why* they were created (e.g., "Synthetic deposit (zero cost basis) created due to insufficient balance for withdrawal on YYYY-MM-DD", "Final balance adjustment based on user input"). This transparency is crucial for understanding the tax report's basis.
 
 ## 4. Tax Calculation Logic
 
