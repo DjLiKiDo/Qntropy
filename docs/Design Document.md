@@ -200,34 +200,47 @@ qntropy/
 
 ## 4. Tax Calculation Logic
 
+**Target Jurisdiction: Spain**
+
+The initial implementation will focus on calculating cryptocurrency taxes according to Spanish regulations (IRPF - Impuesto sobre la Renta de las Personas Físicas). All calculations and reporting will be based on the rules applicable in Spain, with amounts expressed in EUR.
+
 ### 4.1 Taxable Events Identification
-- Define a mapping from Cointracking.info transaction types (and internal types) to taxable event categories (e.g., buy, sell, trade, staking reward, fee, transfer).
-- Identify disposals (sell, trade where the asset is the 'out' currency) as primary taxable events triggering gain/loss calculation.
-- Identify income events (staking rewards, airdrops classified as income).
-- Determine the holding period for each disposed asset lot based on the acquisition date (from actual or synthetic transactions) and disposal date. Classify as short-term or long-term based on regulatory thresholds (e.g., 1 year).
+- Define a mapping from Cointracking.info transaction types (and internal types) to taxable event categories under Spanish law.
+- **Primary Taxable Events (Capital Gains/Losses - *Ganancias y Pérdidas Patrimoniales*):**
+    - Sale of cryptocurrency for fiat currency (e.g., BTC -> EUR).
+    - Exchange of one cryptocurrency for another (e.g., BTC -> ETH). These "swaps" are considered disposals of the first asset and acquisitions of the second.
+- **Income Events (*Rendimientos del Capital Mobiliario* or other income types):**
+    - Staking rewards, interest earned from lending crypto.
+    - Airdrops (treatment can vary, often considered a capital gain with zero acquisition cost upon disposal, but specific guidance should be monitored).
+- **Non-Taxable Events (Generally):**
+    - Buying cryptocurrency with fiat.
+    - Transfers between own wallets/exchanges (*Permutas*).
+- **Holding Period:** Determine the holding period for each disposed asset lot. In Spain, gains/losses are classified based on whether the asset was held for **more than 12 months** (long-term, integrated into the *Base Imponible del Ahorro*) or **12 months or less** (short-term, also integrated into the *Base Imponible del Ahorro*). *Note: Historically, short-term gains went to the general base, but recent changes integrate both into the savings base.*
 
 ### 4.2 Gain/Loss Calculation
-For each taxable disposal event:
-- Calculate **Proceeds**: Amount of asset received * market price in EUR at transaction time.
-- Determine **Cost Basis**: Cost basis of the specific lot(s) being disposed of (calculated in 3.3 using FIFO/etc.) in EUR.
+For each taxable disposal event (*Ganancia o Pérdida Patrimonial*):
+- Calculate **Proceeds (*Valor de Transmisión*)**: Amount of asset received * market price in EUR at transaction time. For crypto-to-crypto swaps, this is the fair market value in EUR of the crypto received.
+- Determine **Cost Basis (*Valor de Adquisición*)**: Cost basis of the specific lot(s) being disposed of (calculated in 3.3 using FIFO, as it's the method mandated by Spanish tax authorities - *Dirección General de Tributos*) in EUR. This includes the purchase price and associated non-deductible acquisition costs (e.g., purchase fees).
 - Compute **Gain/Loss**: Proceeds - Cost Basis.
-- Factor in **Fees**: Adjust proceeds or cost basis based on how fees are treated (e.g., selling fees reduce proceeds, buying fees add to cost basis).
-- Aggregate gains/losses, categorized by short-term and long-term.
+- Factor in **Fees**:
+    - Acquisition fees (e.g., trading fees paid when buying) are added to the Cost Basis.
+    - Disposal fees (e.g., trading fees paid when selling/swapping) are deducted from the Proceeds.
+- Aggregate gains/losses. In Spain, all capital gains/losses from crypto (both short and long-term) are integrated into the *Base Imponible del Ahorro* and taxed at progressive rates (e.g., 19% up to €6,000, 21% from €6,000 to €50,000, etc. - rates subject to change). Net losses can potentially offset other capital gains within the savings base, subject to limitations.
 
 ### 4.3 Special Situations
-- **Staking Rewards/Interest**: Treat as income at the time received, valued at the market price in EUR. These rewards then form a new lot with a cost basis equal to the income recognized.
-- **Airdrops/Forks**: Treatment varies by jurisdiction. May be income upon receipt or have a zero cost basis until sold. Implement based on target jurisdiction rules (initially, potentially zero cost basis).
-- **Transfers (Internal)**: Generally not taxable events, but fees associated might be deductible or capitalized depending on context. Track transfers accurately for balance reconciliation.
-- **Margin Trading/Liquidations**: More complex; defer to future enhancements unless specifically required initially. Mark these transactions if identifiable.
-- **Transaction Fees**: Ensure consistent handling (add to basis on acquisition, deduct from proceeds on disposal, or potentially expense if related to income generation like staking).
+- **Staking Rewards/Interest**: Generally treated as *Rendimientos del Capital Mobiliario* (Income from Movable Capital) in Spain. Taxable upon receipt, valued at the market price in EUR at that time. This income is integrated into the *Base Imponible del Ahorro*. The received crypto forms a new lot with a cost basis equal to the income recognized.
+- **Airdrops/Forks**: Spanish tax authorities often consider these as generating a capital gain upon disposal, with an acquisition value (cost basis) of zero. The full proceeds (less disposal fees) become the taxable gain, integrated into the *Base Imponible del Ahorro*.
+- **Transfers (Internal)**: Transfers between an individual's own accounts or wallets (*permutas*) are not taxable events in Spain. However, associated transaction fees (e.g., network fees) might not be directly deductible but could potentially be factored into the cost basis or proceeds of a later taxable event if directly related. Accurate tracking is vital for reconciliation.
+- **Margin Trading/Liquidations**: Complex. Liquidations trigger standard capital gain/loss calculations. Margin interest paid might not be deductible. Defer detailed handling unless specifically required.
+- **Transaction Fees**: As detailed in 4.2, acquisition fees increase cost basis, and disposal fees decrease proceeds. Network fees for non-taxable transfers are generally not directly deductible against income or gains.
 
 ## 5. Reporting Features
 
 ### 5.1 Tax Reports
-- **Capital Gains Report**: Summary of short-term and long-term capital gains/losses, aggregated by asset.
-- **Income Report**: Summary of income from staking, airdrops, etc.
-- **Detailed Transaction List**: Chronological list of all transactions, including calculated cost basis, proceeds, gain/loss for taxable events, and flags for synthetic/adjusted entries. Essential for audit.
-- **Form-Specific Data (Future)**: Output data formatted to assist filling specific tax forms (e.g., Form 8949 for US, specific schedules for other countries).
+- **Capital Gains Report (*Ganancias y Pérdidas Patrimoniales*)**: Summary of gains and losses integrated into the *Base Imponible del Ahorro*, potentially distinguishing between acquisition dates for informational purposes, aggregated by asset. Essential for the *Declaración de la Renta* (IRPF).
+- **Income Report (*Rendimientos del Capital Mobiliario*)**: Summary of income from staking, lending, etc., also integrated into the *Base Imponible del Ahorro*.
+- **Detailed Transaction List**: Chronological list of all transactions, including calculated cost basis (*Valor de Adquisición*), proceeds (*Valor de Transmisión*), gain/loss for taxable events, and flags for synthetic/adjusted entries. Crucial for audit and supporting the IRPF declaration.
+- **Form-Specific Data (Future)**: Output data formatted to assist filling specific sections of the Spanish *Declaración de la Renta* (IRPF). Data might also be relevant for *Modelo 721* (informative declaration of virtual currencies held abroad), although Qntropy focuses on calculating gains/income, not just reporting holdings.
 
 ### 5.2 Portfolio Analytics (Optional/Future)
 - Current portfolio holdings and value (requires real-time price fetching).
