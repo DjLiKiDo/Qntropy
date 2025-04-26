@@ -52,7 +52,7 @@ This design document outlines the architecture, core functionality, implementati
 - **Core Libraries**: 
   - pandas (for data processing)
   - pytest (for testing)
-  - requests (for API interactions)
+  - requests (for external API interactions, e.g., price fetching)
 - **Architecture**: Modular design following SOLID principles
 - **Data Storage**: 
   - CSV files for input
@@ -71,7 +71,7 @@ qntropy/
 │       ├── models/
 │       ├── reconciliation/
 │       ├── tax/
-│       ├── api/
+│       ├── external_apis/  # Clients for external services (e.g., price APIs)
 │       ├── utils/
 │       └── cli/          # Typer/Click entry point
 ├── tests/
