@@ -247,7 +247,7 @@ For each taxable disposal event:
 - [ ] Set up project structure and repository
 - [ ] Configure development environment (virtual env, dependencies)
 - [ ] Implement data models for transactions
-- [ ] Create CSV importers for Binance format
+- [ ] Create CSV importers for Cointracking.info format
 - [ ] Develop basic validation for imported data
 - [ ] Write unit tests for core components
 
