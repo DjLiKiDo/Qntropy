@@ -55,8 +55,8 @@ This design document outlines the architecture, core functionality, implementati
   - requests (for external API interactions, e.g., price fetching)
 - **Architecture**: Modular design following SOLID principles
 - **Data Storage**: 
-  - CSV files for input
-  - SQLite/CSV for processed data
+  - CSV files for input data.
+  - **Processed Data**: Initially, processed data (reconciled transactions, calculated basis, etc.) will be stored in CSV files within the `data/output/` directory. This allows for a simpler initial implementation. A database solution (e.g., SQLite or PostgreSQL) will be considered for future enhancements to handle larger datasets and more complex queries more efficiently.
 
 ### 2.2 Directory Structure
 ```
@@ -80,8 +80,8 @@ qntropy/
 │   └── fixtures/
 ├── config/               # .env, settings.toml (opcional)
 ├── data/
-│   ├── input/   (gitignored)
-│   └── output/  (gitignored)
+│   ├── input/   (gitignored) # Source CSV files (e.g., Cointracking exports)
+│   └── output/  (gitignored) # Generated CSV files with processed data and reports
 ├── docs/
 └── tools/                # scripts puntuales
 
