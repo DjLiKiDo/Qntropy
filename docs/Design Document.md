@@ -257,35 +257,117 @@ For each taxable disposal event (*Ganancia o Pérdida Patrimonial*):
 ## 6. Implementation Plan
 
 ### 6.1 Phase 1: Core Infrastructure (Weeks 1-2)
-- [ ] Set up project structure and repository
-- [ ] Configure development environment (virtual env, dependencies)
-- [ ] Implement data models for transactions
-- [ ] Create CSV importers for Cointracking.info format
-- [ ] Develop basic validation for imported data
-- [ ] Write unit tests for core components
+- [ ] **Project Setup:**
+    - [ ] Initialize Poetry project (`poetry init`).
+    - [ ] Create directory structure as defined in section 2.2.
+    - [ ] Set up Git repository and initial commit.
+    - [ ] Configure `.gitignore`.
+- [ ] **Development Environment:**
+    - [ ] Define base dependencies in `pyproject.toml` (Python, pandas, pytest).
+    - [ ] Configure `ruff`, `mypy`, `black` via `pyproject.toml`.
+    - [ ] Set up pre-commit hooks.
+    - [ ] Basic GitHub Actions workflow for linting and testing.
+- [ ] **Core Data Models:**
+    - [ ] Define `Transaction` dataclass/Pydantic model with type hints.
+    - [ ] Define `Asset` and `Balance` related models if needed.
+    - [ ] Implement basic enum for transaction types.
+- [ ] **CSV Importer (Cointracking.info):**
+    - [ ] Implement CSV reading logic using pandas.
+    - [ ] Map Cointracking columns to internal `Transaction` model.
+    - [ ] Handle different date/time formats.
+    - [ ] Implement initial data type validation (numeric, date).
+    - [ ] Add basic error handling for missing columns or incorrect formats (`ImporterException`).
+- [ ] **Basic Validation:**
+    - [ ] Implement functions to check for plausible values (e.g., non-negative amounts).
+    - [ ] Add logging for validation warnings/errors.
+- [ ] **Unit Testing:**
+    - [ ] Set up `pytest` structure (`tests/unit`, `tests/fixtures`).
+    - [ ] Write unit tests for data model instantiation.
+    - [ ] Write unit tests for CSV parsing logic (using sample fixture files).
+    - [ ] Write unit tests for basic validation functions.
 
 ### 6.2 Phase 2: Transaction Reconciliation (Weeks 3-4)
-- [ ] Develop balance tracking system
-- [ ] Implement missing transaction detection algorithm
-- [ ] Create balance consolidation logic
-- [ ] Build adjustment transaction generator
-- [ ] Test with sample datasets
+- [ ] **Balance Tracking:**
+    - [ ] Implement a class or module to manage asset balances over time.
+    - [ ] Process transactions chronologically, updating balances per asset.
+    - [ ] Handle deposits, withdrawals, trades affecting balances.
+- [ ] **Insufficient Balance Detection:**
+    - [ ] During withdrawal/trade processing, check if calculated balance is sufficient.
+    - [ ] Implement logic to raise `InsufficientBalanceException` or flag the transaction.
+    - [ ] Log detected insufficiencies with relevant transaction details.
+- [ ] **Synthetic Transaction Generation (Insufficient Balance):**
+    - [ ] Implement function to create a synthetic "Balancing Deposit" transaction.
+    - [ ] Ensure synthetic transactions use zero cost basis initially.
+    - [ ] Clearly flag synthetic transactions (e.g., in 'notes').
+    - [ ] Insert synthetic deposit immediately before the triggering transaction.
+- [ ] **Balance Consolidation Logic:**
+    - [ ] Implement mechanism to load user-provided final balances (e.g., from a separate CSV).
+    - [ ] Compare calculated final balances with provided actual balances after processing all transactions.
+    - [ ] Generate final synthetic adjustment transactions (deposits/withdrawals) if discrepancies exist.
+    - [ ] Flag adjustment transactions clearly.
+- [ ] **Testing:**
+    - [ ] Create test datasets demonstrating missing history and balance discrepancies.
+    - [ ] Write integration tests for the end-to-end reconciliation process.
+    - [ ] Write unit tests for balance tracking logic.
+    - [ ] Write unit tests for synthetic transaction generation.
 
 ### 6.3 Phase 3: Cost and Tax Calculation (Weeks 5-7)
-- [ ] Integrate with price data sources
-- [ ] Implement cost basis calculation modules
-- [ ] Develop tax event identification logic
-- [ ] Create gain/loss calculation engine
-- [ ] Implement different accounting methods (FIFO/LIFO)
-- [ ] Build comprehensive test suite for tax calculations
+- [ ] **Price Data Integration:**
+    - [ ] Design interface for price fetching services.
+    - [ ] Implement client for at least one price API (e.g., CoinGecko).
+    - [ ] Add basic caching mechanism for fetched prices (e.g., simple dictionary or file-based).
+    - [ ] Implement logic for handling missing prices (e.g., fallback, logging).
+    - [ ] Handle currency conversions (e.g., BTC -> USD -> EUR).
+- [ ] **Cost Basis Calculation (FIFO):**
+    - [ ] Implement FIFO logic to track acquisition lots (date, quantity, cost basis in EUR).
+    - [ ] For disposals, identify and consume the oldest lots.
+    - [ ] Calculate cost basis for disposed amounts, considering acquisition fees.
+- [ ] **Tax Event Identification (Spain):**
+    - [ ] Map internal transaction types to Spanish taxable events (Capital Gain/Loss, Income).
+    - [ ] Identify disposals (Sell for Fiat, Crypto-to-Crypto).
+    - [ ] Identify income events (Staking, Interest).
+    - [ ] Determine holding period (>12 months or <=12 months).
+- [ ] **Gain/Loss Calculation Engine:**
+    - [ ] For each taxable disposal, calculate proceeds (value of asset received in EUR, less disposal fees).
+    - [ ] Calculate gain/loss (Proceeds - Cost Basis).
+    - [ ] Store calculated gain/loss, holding period, proceeds, cost basis per event.
+- [ ] **Handling Special Situations (Spain):**
+    - [ ] Implement logic for Staking/Interest: recognize income at receipt (EUR value), create new lot with basis = income.
+    - [ ] Implement logic for Airdrops: zero cost basis upon disposal.
+    - [ ] Ensure internal transfers are correctly ignored as taxable events.
+- [ ] **Testing:**
+    - [ ] Create test cases covering various scenarios: simple trades, FIFO consumption, staking, airdrops.
+    - [ ] Write unit tests for FIFO logic.
+    - [ ] Write unit tests for gain/loss calculation.
+    - [ ] Write integration tests combining reconciliation and tax calculation.
+    - [ ] Validate calculations against manual examples based on Spanish tax rules.
 
 ### 6.4 Phase 4: Reporting (Weeks 8-10)
-- [ ] Design report templates
-- [ ] Create tax report generators
-- [ ] Implement transaction audit trail
-- [ ] Develop data visualization components
-- [ ] Build export functionality for various formats
-- [ ] Complete end-to-end testing
+- [ ] **Report Data Aggregation:**
+    - [ ] Aggregate calculated gains/losses for the reporting period.
+    - [ ] Aggregate income recognized (staking, etc.).
+    - [ ] Prepare detailed transaction list with all calculated fields (basis, proceeds, gain/loss, flags).
+- [ ] **Report Generation:**
+    - [ ] Implement functions to generate CSV output for:
+        - [ ] Capital Gains/Losses Summary (*Ganancias y Pérdidas Patrimoniales*).
+        - [ ] Income Summary (*Rendimientos del Capital Mobiliario*).
+        - [ ] Detailed Transaction Log.
+        - [ ] Reconciliation/Audit Report (showing synthetic transactions).
+- [ ] **CLI Interface:**
+    - [ ] Develop basic CLI using Typer/Click.
+    - [ ] Add commands for: importing data, running reconciliation, calculating taxes, generating reports.
+    - [ ] Include options for input file paths, output directory, reporting year.
+- [ ] **Audit Support Features:**
+    - [ ] Ensure synthetic transactions are clearly marked in reports.
+    - [ ] Include price source information where relevant (optional).
+    - [ ] Ensure data provenance (source file linkage) is maintained or logged.
+- [ ] **End-to-End Testing:**
+    - [ ] Create comprehensive end-to-end test scenarios using sample Cointracking files.
+    - [ ] Verify generated reports against expected outcomes based on manual calculations or known results.
+    - [ ] Test CLI commands and options.
+- [ ] **Documentation:**
+    - [ ] Update README with usage instructions.
+    - [ ] Add basic documentation on report formats.
 
 ## 7. Future Enhancements
 
