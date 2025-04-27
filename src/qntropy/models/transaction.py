@@ -35,7 +35,7 @@ class TransactionType(str, Enum):
     
     # System-generated transactions
     SYNTHETIC_DEPOSIT = "Synthetic Deposit"                # Generated for balance reconciliation
-    CONSOLIDATION_ADJUSTMENT = "Consolidation Adjustment"  # Final balance adjustment
+    SYNTHETIC_WITHDRAWAL = "Consolidation Adjustment"      # Generated for balance reconciliation
 
 
 class Asset(BaseModel):
