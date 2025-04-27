@@ -68,23 +68,20 @@ Qntropy/
 ### Importar transacciones desde Cointracking.info
 
 ```bash
-# Activar el entorno virtual de Poetry
-poetry shell
-
 # Importar un archivo CSV de Cointracking.info
-qntropy import-cointracking path/to/cointracking_export.csv
+poetry run qntropy import-cointracking path/to/cointracking_export.csv
 
 # Guardar las transacciones importadas en formato JSON
-qntropy import-cointracking path/to/cointracking_export.csv -o transactions.json
+poetry run qntropy import-cointracking path/to/cointracking_export.csv -o transactions.json
 
 # Ver ayuda y opciones disponibles
-qntropy import-cointracking --help
+poetry run qntropy import-cointracking --help
 ```
 
 ### Mostrar versión
 
 ```bash
-qntropy version
+poetry run qntropy version
 ```
 
 ## Formato de Datos de Entrada
