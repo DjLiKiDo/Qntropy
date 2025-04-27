@@ -61,7 +61,7 @@ This design document outlines the architecture, core functionality, implementati
 ### 2.2 Directory Structure
 ```
 qntropy/
-├── pyproject.toml
+├── requirements.txt
 ├── README.md
 ├── LICENSE
 ├── .gitignore
@@ -90,7 +90,7 @@ qntropy/
 ### 2.3 Project Foundation
 
 #### 2.3.1 Project Bootstrapping
-- Initialize project with Poetry for dependency management
+- Initialize project with a virtual environment (venv) for dependency management
 - Create standardized directory structure following the layout in section 2.2
 - Set up Git repository with appropriate .gitignore file
 - Configure pre-commit hooks for code quality checks
@@ -100,6 +100,7 @@ qntropy/
   - mypy for static type checking
   - black for code formatting
   - pytest for test execution
+- Create requirements.txt for dependency tracking
 
 #### 2.3.2 Error Handling Strategy
 - Define custom exception hierarchy:
@@ -258,13 +259,14 @@ For each taxable disposal event (*Ganancia o Pérdida Patrimonial*):
 
 ### 6.1 Phase 1: Core Infrastructure (Weeks 1-2)
 - [ ] **Project Setup:**
-    - [ ] Initialize Poetry project (`poetry init`).
+    - [ ] Create virtual environment (`python -m venv venv`).
     - [ ] Create directory structure as defined in section 2.2.
     - [ ] Set up Git repository and initial commit.
     - [ ] Configure `.gitignore`.
 - [ ] **Development Environment:**
-    - [ ] Define base dependencies in `pyproject.toml` (Python, pandas, pytest).
-    - [ ] Configure `ruff`, `mypy`, `black` via `pyproject.toml`.
+    - [ ] Define dependencies in `requirements.txt` (Python, pandas, pytest).
+    - [ ] Install development dependencies (ruff, mypy, black).
+    - [ ] Configure `ruff`, `mypy`, `black` via configuration files.
     - [ ] Set up pre-commit hooks.
     - [ ] Basic GitHub Actions workflow for linting and testing.
 - [ ] **Core Data Models:**

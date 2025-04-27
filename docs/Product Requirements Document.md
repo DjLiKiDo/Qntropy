@@ -27,7 +27,7 @@ Qntropy is a desktop software application designed to help Spanish cryptocurrenc
 
 *   As a user, I want to import my transaction history using a CSV file exported from Cointracking.info, so that the system can process my trades.
 *   As a user, I want the system to validate the imported CSV data for correct formatting and plausible values, so that I am alerted to potential issues early.
-*   As a developer, I need a well-defined project structure, dependency management (Poetry), and basic CI/CD setup, so that the project is maintainable and follows best practices.
+*   As a developer, I need a well-defined project structure, dependency management (virtual environments), and basic CI/CD setup, so that the project is maintainable and follows best practices.
 *   As a developer, I need clear data models to represent transactions internally, so that data handling is consistent.
 
 **Phase 2: Transaction Reconciliation**

@@ -30,7 +30,7 @@ Qntropy/
 │   ├── unit/         # Tests unitarios
 │   └── integration/  # Tests de integración
 ├── tools/            # Herramientas auxiliares
-├── pyproject.toml    # Configuración de Poetry y del proyecto
+├── requirements.txt  # Dependencias del proyecto
 ├── LICENSE           # Información de licencia
 └── README.md         # Este archivo
 ```
@@ -38,7 +38,6 @@ Qntropy/
 ## Requisitos
 
 - Python 3.11+
-- [Poetry](https://python-poetry.org/) para gestión de dependencias
 
 ## Instalación
 
@@ -48,19 +47,33 @@ Qntropy/
    cd Qntropy
    ```
 
-2. Instala Poetry si aún no lo tienes:
+2. Crea un entorno virtual:
    ```
-   curl -sSL https://install.python-poetry.org | python3 -
-   ```
-
-3. Instala las dependencias usando Poetry:
-   ```
-   poetry install
+   python -m venv venv
    ```
 
-4. (Opcional) Instala los hooks de pre-commit:
+3. Activa el entorno virtual:
    ```
-   poetry run pre-commit install
+   # En Windows
+   venv\Scripts\activate
+   
+   # En macOS/Linux
+   source venv/bin/activate
+   ```
+
+4. Instala las dependencias:
+   ```
+   pip install -r requirements.txt
+   ```
+
+5. (Opcional) Instala las dependencias de desarrollo:
+   ```
+   pip install -r requirements-dev.txt
+   ```
+
+6. (Opcional) Instala los hooks de pre-commit:
+   ```
+   pre-commit install
    ```
 
 ## Uso
@@ -69,19 +82,19 @@ Qntropy/
 
 ```bash
 # Importar un archivo CSV de Cointracking.info
-poetry run qntropy import-cointracking path/to/cointracking_export.csv
+python -m qntropy import-cointracking path/to/cointracking_export.csv
 
 # Guardar las transacciones importadas en formato JSON
-poetry run qntropy import-cointracking path/to/cointracking_export.csv -o transactions.json
+python -m qntropy import-cointracking path/to/cointracking_export.csv -o transactions.json
 
 # Ver ayuda y opciones disponibles
-poetry run qntropy import-cointracking --help
+python -m qntropy import-cointracking --help
 ```
 
 ### Mostrar versión
 
 ```bash
-poetry run qntropy version
+python -m qntropy version
 ```
 
 ## Formato de Datos de Entrada
@@ -105,25 +118,25 @@ La aplicación está diseñada para trabajar con archivos CSV de CoinTracking.in
 
 ```bash
 # Ejecutar todos los tests
-poetry run pytest
+pytest
 
 # Ejecutar tests con cobertura
-poetry run pytest --cov=qntropy
+pytest --cov=qntropy
 
 # Ejecutar solo tests unitarios o de integración
-poetry run pytest tests/unit/
-poetry run pytest tests/integration/
+pytest tests/unit/
+pytest tests/integration/
 ```
 
 ### Linting y Formateo
 
 ```bash
 # Ejecutar linters
-poetry run ruff check .
-poetry run mypy .
+ruff check .
+mypy .
 
 # Formatear código
-poetry run black .
+black .
 ```
 
 ## Contribuir
