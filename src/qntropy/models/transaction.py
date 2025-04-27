@@ -91,7 +91,9 @@ class Transaction(BaseModel):
     source_line: Optional[int] = Field(None, description="Line number in source file")
     
     # Price data (if available)
-    price_eur: Optional[Decimal] = Field(None, description="Price in EUR at transaction time")
+    price_in_eur: Optional[Decimal] = Field(None, description="Price of asset_in in EUR at transaction time")
+    price_out_eur: Optional[Decimal] = Field(None, description="Price of asset_out in EUR at transaction time")
+    price_fee_eur: Optional[Decimal] = Field(None, description="Price of fee asset in EUR at transaction time")
     price_source: Optional[str] = Field(None, description="Source of price data")
 
     # Flag for synthetic transactions
