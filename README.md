@@ -1,29 +1,36 @@
 # Qntropy
 
-Qntropy es una aplicación en Python diseñada para analizar y procesar archivos CSV exportados desde CoinTracking, proporcionando información valiosa sobre tus transacciones de criptomonedas.
+Qntropy es una aplicación en Python diseñada para analizar y procesar archivos CSV exportados desde CoinTracking.info, proporcionando información valiosa sobre tus transacciones de criptomonedas y ayudando a la preparación de informes fiscales para inversores españoles.
 
 ## Descripción
 
-Esta herramienta permite importar datos de transacciones de criptomonedas desde archivos CSV de CoinTracking y realizar diversos análisis, como:
+Esta herramienta permite importar datos de transacciones de criptomonedas desde archivos CSV de CoinTracking.info y realizar diversos análisis, como:
 
-- Deteccion y correccion de operaciones faltantes
-- Consolidacion de saldos
+- Detección y corrección de operaciones faltantes
+- Consolidación de saldos
 - Resumen de transacciones por tipo (depósitos, retiros, trades, comisiones)
 - Análisis de rendimiento por activo
-- Cálculo de ganancias y pérdidas
+- Cálculo de ganancias y pérdidas para declaración fiscal
 - Visualizaciones de la evolución de tu portafolio
-- Exportación de datos procesados para informes fiscales
+- Exportación de datos procesados para informes fiscales compatibles con la legislación española
 
 ## Estructura del Proyecto
 
 ```
 Qntropy/
+├── config/           # Archivos de configuración
 ├── data/
-│   ├── input/        # Archivos CSV originales de CoinTracking
+│   ├── input/        # Archivos CSV originales de CoinTracking.info
 │   └── output/       # Archivos de resultados procesados
 ├── docs/             # Documentación
 ├── src/              # Código fuente
+│   └── qntropy/      # Módulo principal
 ├── tests/            # Tests unitarios y de integración
+│   ├── fixtures/     # Datos de muestra para pruebas
+│   ├── unit/         # Tests unitarios
+│   └── integration/  # Tests de integración
+├── tools/            # Herramientas auxiliares
+├── pyproject.toml    # Configuración de Poetry y del proyecto
 ├── LICENSE           # Información de licencia
 └── README.md         # Este archivo
 ```
@@ -31,7 +38,7 @@ Qntropy/
 ## Requisitos
 
 - Python 3.11+
-- Dependencias listadas en `requirements.txt`
+- [Poetry](https://python-poetry.org/) para gestión de dependencias
 
 ## Instalación
 
@@ -41,49 +48,86 @@ Qntropy/
    cd Qntropy
    ```
 
-2. Crea y activa un entorno virtual:
+2. Instala Poetry si aún no lo tienes:
    ```
-   python -m venv venv
-   source venv/bin/activate  # En Windows usa: venv\Scripts\activate
+   curl -sSL https://install.python-poetry.org | python3 -
    ```
 
-3. Instala las dependencias:
+3. Instala las dependencias usando Poetry:
    ```
-   pip install -r requirements.txt
+   poetry install
+   ```
+
+4. (Opcional) Instala los hooks de pre-commit:
+   ```
+   poetry run pre-commit install
    ```
 
 ## Uso
 
-1. Coloca tu archivo CSV exportado de CoinTracking en la carpeta `data/input/`.
-2. Ejecuta el script principal:
-   ```
-   python src/main.py
-   ```
-3. Los resultados procesados se guardarán en la carpeta `data/output/`.
+### Importar transacciones desde Cointracking.info
+
+```bash
+# Activar el entorno virtual de Poetry
+poetry shell
+
+# Importar un archivo CSV de Cointracking.info
+qntropy import-cointracking path/to/cointracking_export.csv
+
+# Guardar las transacciones importadas en formato JSON
+qntropy import-cointracking path/to/cointracking_export.csv -o transactions.json
+
+# Ver ayuda y opciones disponibles
+qntropy import-cointracking --help
+```
+
+### Mostrar versión
+
+```bash
+qntropy version
+```
 
 ## Formato de Datos de Entrada
 
-La aplicación está diseñada para trabajar con archivos CSV de CoinTracking que contienen las siguientes columnas:
+La aplicación está diseñada para trabajar con archivos CSV de CoinTracking.info que contienen las siguientes columnas:
 - Type (tipo de operación: Deposit, Trade, Withdrawal, etc.)
-- Buy (cantidad comprada)
-- Cur. (moneda comprada)
-- Sell (cantidad vendida)
-- Cur.1 (moneda vendida)
+- Buy Amount (cantidad comprada)
+- Buy Currency (moneda comprada)
+- Sell Amount (cantidad vendida)
+- Sell Currency (moneda vendida)
 - Fee (comisión)
-- Cur.2 (moneda de la comisión)
+- Fee Currency (moneda de la comisión)
 - Exchange (plataforma de intercambio)
 - Group (grupo de transacción)
 - Comment (comentario)
 - Date (fecha y hora)
-- Tx-ID (identificador de transacción)
 
-## Características
+## Desarrollo
 
-- Procesamiento eficiente de grandes volúmenes de datos
-- Detección y manejo de diferentes formatos de fecha
-- Cálculo automático de ganancias y pérdidas
-- Generación de informes personalizados
-- Visualizaciones interactivas del comportamiento de tu portafolio
+### Ejecutar Tests
+
+```bash
+# Ejecutar todos los tests
+poetry run pytest
+
+# Ejecutar tests con cobertura
+poetry run pytest --cov=qntropy
+
+# Ejecutar solo tests unitarios o de integración
+poetry run pytest tests/unit/
+poetry run pytest tests/integration/
+```
+
+### Linting y Formateo
+
+```bash
+# Ejecutar linters
+poetry run ruff check .
+poetry run mypy .
+
+# Formatear código
+poetry run black .
+```
 
 ## Contribuir
 
