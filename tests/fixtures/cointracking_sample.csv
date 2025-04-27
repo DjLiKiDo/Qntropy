@@ -1,0 +1,8 @@
+Type,Buy Amount,Buy Currency,Sell Amount,Sell Currency,Fee,Fee Currency,Exchange,Group,Comment,Date
+Trade,0.5,BTC,7500,EUR,5,EUR,Binance,Trading,,2023-01-15 14:30:25
+Deposit,1000,EUR,,,,,Binance,Funding,Initial deposit,2023-01-10 09:15:00
+Withdrawal,,,,500,EUR,1,EUR,Binance,Funding,Partial withdrawal,2023-01-20 16:45:30
+Staking,10,DOT,,,0.1,DOT,Kraken,Staking,Monthly rewards,2023-02-01 00:00:00
+Buy,1,ETH,1800,EUR,2.5,EUR,Coinbase,Investment,,2023-02-15 10:20:15
+Sell,0.25,BTC,5000,EUR,7.5,EUR,Binance,Trading,,2023-03-01 11:30:00
+Transfer,0.5,ETH,,,0.001,ETH,Coinbase,Transfer,To hardware wallet,2023-03-15 17:00:00
