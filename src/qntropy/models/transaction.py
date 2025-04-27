@@ -54,7 +54,9 @@ class AssetAmount(BaseModel):
 
     def __str__(self) -> str:
         """Return string representation of the asset amount."""
-        return f"{self.amount} {self.asset}"
+        # Format decimal to avoid scientific notation
+        formatted_amount = format(self.amount, 'f').rstrip('0').rstrip('.') if '.' in format(self.amount, 'f') else format(self.amount, 'f')
+        return f"{formatted_amount} {self.asset}"
 
     @field_validator('amount')
     @classmethod

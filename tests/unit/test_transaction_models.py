@@ -49,6 +49,25 @@ class TestAssetAmount:
         asset_amount = AssetAmount(asset=asset, amount=Decimal("2.75"))
         assert str(asset_amount) == "2.75 ETH"
 
+    def test_scientific_notation_display(self):
+        """Test that scientific notation is displayed as decimal."""
+        asset = Asset(symbol="BTC")
+        # Test very small number (scientific notation)
+        small_amount = AssetAmount(asset=asset, amount=Decimal("1e-7"))
+        assert str(small_amount) == "0.0000001 BTC"
+        
+        # Test very large number
+        large_amount = AssetAmount(asset=asset, amount=Decimal("1e6"))
+        assert str(large_amount) == "1000000 BTC"
+        
+        # Test number with trailing zeros
+        trailing_zeros = AssetAmount(asset=asset, amount=Decimal("1.500000"))
+        assert str(trailing_zeros) == "1.5 BTC"
+        
+        # Test whole number
+        whole_number = AssetAmount(asset=asset, amount=Decimal("5.0"))
+        assert str(whole_number) == "5 BTC"
+
     def test_asset_amount_validation(self):
         """Test validation of AssetAmount."""
         asset = Asset(symbol="BTC")
@@ -60,6 +79,34 @@ class TestAssetAmount:
         # Test with invalid amount
         with pytest.raises(ValidationError):
             AssetAmount(asset=asset, amount=Decimal("-1"))
+
+    def test_scientific_notation_precision(self):
+        """Test that scientific notation maintains calculation precision."""
+        asset = Asset(symbol="BTC")
+        
+        # Create amounts with scientific notation
+        small_amount1 = AssetAmount(asset=asset, amount=Decimal("1e-7"))
+        small_amount2 = AssetAmount(asset=asset, amount=Decimal("2e-7"))
+        
+        # Verify display formatting
+        assert str(small_amount1) == "0.0000001 BTC"
+        assert str(small_amount2) == "0.0000002 BTC"
+        
+        # Verify precision in calculations is maintained
+        sum_amount = small_amount1.amount + small_amount2.amount
+        assert sum_amount == Decimal("3e-7")
+        
+        # Test multiplication precision
+        mult_result = small_amount1.amount * Decimal("1000000")
+        assert mult_result == Decimal("0.1")
+        
+        # Test division precision
+        div_result = small_amount1.amount / Decimal("0.0000001")
+        assert div_result == Decimal("1")
+        
+        # Test complex calculation with mixed scales
+        complex_calc = (small_amount1.amount * Decimal("1e6")) / Decimal("10") + small_amount2.amount
+        assert complex_calc == Decimal("0.0100002")
 
 
 class TestTransaction:
