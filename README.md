@@ -81,7 +81,10 @@ Qntropy/
 ### Importar transacciones desde Cointracking.info
 
 ```bash
-# Importar un archivo CSV de Cointracking.info
+# Importar un archivo CSV de Cointracking.info (por defecto usa data/input/CoinTracking_Trade_Table_Full.csv)
+python -m qntropy import-cointracking
+
+# Importar un archivo CSV específico de Cointracking.info
 python -m qntropy import-cointracking path/to/cointracking_export.csv
 
 # Guardar las transacciones importadas en formato JSON
