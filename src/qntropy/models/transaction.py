@@ -26,6 +26,9 @@ class TransactionType(str, Enum):
     INTEREST = "Interest"                                  # Income from lending/interest
     AIRDROP = "Airdrop"                                    # Free tokens received
     MINING = "Mining"                                      # Mining rewards
+
+    # Derivatives/Futures transactions (New)
+    DERIVATIVE_PNL = "Derivative PnL"                      # Profit and loss from derivatives trading
     
     # Fee transaction
     FEE = "Fee"                                            # Transaction fee (separate entry)
