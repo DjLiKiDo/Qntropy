@@ -35,6 +35,13 @@ class CointrackingImporter:
         "Transfer": TransactionType.TRANSFER,
         "Buy": TransactionType.BUY,
         "Sell": TransactionType.SELL,
+        "Derivatives / Futures Loss": TransactionType.DERIVATIVE_PNL,
+        "Derivatives / Futures Profit": TransactionType.DERIVATIVE_PNL,
+        "Other Fee": TransactionType.FEE,
+        "Other Expense": TransactionType.FEE,
+        "Other Income": TransactionType.INTEREST,
+        "Interest Income": TransactionType.INTEREST,
+        "Reward / Bonus": TransactionType.INTEREST,
     }
 
     # Mapping CSV column names from CoinTracking to our expected names
