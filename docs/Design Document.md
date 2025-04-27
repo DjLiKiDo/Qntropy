@@ -49,12 +49,12 @@ This design document outlines the architecture, core functionality, implementati
 
 ### 2.1 Technical Stack
 - **Language**: Python 3.10+ with type hints
-- **Core Libraries**: 
+- **Core Libraries**:
   - pandas (for data processing)
   - pytest (for testing)
   - requests (for external API interactions, e.g., price fetching)
 - **Architecture**: Modular design following SOLID principles
-- **Data Storage**: 
+- **Data Storage**:
   - CSV files for input data.
   - **Processed Data**: Initially, processed data (reconciled transactions, calculated basis, etc.) will be stored in CSV files within the `data/output/` directory. This allows for a simpler initial implementation. A database solution (e.g., SQLite or PostgreSQL) will be considered for future enhancements to handle larger datasets and more complex queries more efficiently.
 
