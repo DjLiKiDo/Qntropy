@@ -42,6 +42,8 @@ class CointrackingImporter:
         "Other Income": TransactionType.INTEREST,
         "Interest Income": TransactionType.INTEREST,
         "Reward / Bonus": TransactionType.INTEREST,
+        "Provide Liquidity": TransactionType.TRANSFER,
+        "Remove Liquidity": TransactionType.TRANSFER,
     }
 
     # Mapping CSV column names from CoinTracking to our expected names
